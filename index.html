@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rasoi.AI - Your Interactive Kitchen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- 🎨 7. COLOR PALETTE & GLOBAL STYLES --- */
+        :root {
+            --turmeric-yellow: #FFC107;
+            --masala-red: #C62828;
+            --coriander-green: #4CAF50;
+            --warm-cream: #FDF5E6;
+            --charcoal-black: #333333;
+            --knob-bg: #212121;
+            --steel: #c5c9d1;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--warm-cream);
+            color: var(--charcoal-black);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- ✨ 1. ENTRANCE ANIMATION (MASALA DABBA) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--warm-cream);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-out 2.5s;
+        }
+        #masala-dabba {
+            width: 250px;
+            height: 250px;
+            position: relative;
+        }
+        #dabba-base {
+            width: 100%;
+            height: 100%;
+            background: var(--steel);
+            border: 4px solid #aaa;
+            border-radius: 50%;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2), 0 5px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #logo {
+            font-family: 'Kalam', cursive;
+            font-size: 3rem;
+            color: var(--masala-red);
+            opacity: 0;
+            animation: fadeInLogo 1s ease-in 1.5s forwards;
+        }
+        #dabba-lid {
+            width: 100%;
+            height: 100%;
+            background: #e0e4eb;
+            border: 4px solid #aaa;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: openLid 2s ease-in-out 0.5s forwards;
+        }
+        #steam {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Cpath d='M20 150 C 20 100, 80 100, 80 150' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M30 150 C 30 110, 70 110, 70 150' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M40 150 C 40 120, 60 120, 60 150' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center center;
+            opacity: 0;
+            animation: riseSteam 2s ease-out 1.5s forwards;
+        }
+        @keyframes openLid {0%{transform:translateY(0) rotate(0deg) scale(1)}50%{transform:translateY(-20px) rotate(15deg) scale(1.05)}100%{transform:translateY(150px) rotate(90deg) scale(.5);opacity:0}}
+        @keyframes fadeInLogo {from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+        @keyframes riseSteam {0%{transform:translateY(0) scale(.5);opacity:0}50%{opacity:.8}100%{transform:translateY(-100px) scale(1.2);opacity:0}}
+
+        /* --- 🔥 3. AMBIENT KITCHEN & LAYOUT --- */
+        #app-container {
+            width: 100%;
+            max-width: 900px;
+            height: 95vh;
+            max-height: 700px;
+            background-image: url('https://www.transparenttextures.com/patterns/concrete-wall-3.png'), linear-gradient(to bottom, #fdf5e6, #f7e9d4);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,0,0,0.05);
+            border: 1px solid #d3c4b1;
+            position: relative;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: fadeInApp 0.5s ease-out 3s forwards;
+        }
+        @keyframes fadeInApp {to{opacity:1;transform:scale(1)}}
+
+        #stove-flame {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            width: 80px;
+            height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath d='M40,100 C70,70 70,30 40,0 C10,30 10,70 40,100 Z' fill='%2387ceeb'/%3E%3Cpath d='M40,100 C60,75 60,45 40,20 C20,45 20,75 40,100 Z' fill='%231e90ff'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: flicker 0.2s infinite alternate;
+        }
+        @keyframes flicker {0%{transform:scale(1,1) rotate(-1deg);opacity:.8}50%{transform:scale(.95,1.05);opacity:1}100%{transform:scale(1.05,.95) rotate(1deg);opacity:.9}}
+
+        /* --- WIZARD & STEP STYLING --- */
+        #wizard-container { width: 100%; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .step-container { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; animation: slideIn .5s ease-out; }
+        .step-container.slide-out { animation: slideOut .5s ease-out forwards; }
+        .step-container.slide-in-reverse { animation: slideInReverse .5s ease-out; }
+        .step-container h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+        .step-container p.subtitle { color: #666; margin-top: -1rem; margin-bottom: 2rem; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideOut { to { opacity: 0; transform: translateX(-100%); } }
+        @keyframes slideInReverse { from { opacity: 0; transform: translateX(-100%); } to { opacity: 1; transform: translateX(0); } }
+        
+        #progress-bar { width: 100%; background: #ddd; border-radius: 10px; height: 10px; margin-bottom: 2rem; }
+        #progress-bar-fill { width: 0%; background: var(--coriander-green); height: 100%; border-radius: 10px; transition: width 0.5s ease-out; }
+
+        /* --- MULTI-CHOICE CARDS (Diet, Spice, etc.) --- */
+        .choice-grid { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+        .option-card {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+        .option-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .option-card .icon { font-size: 2.5rem; }
+        .option-card .name { font-size: 1rem; font-weight: 500; }
+        .option-card.selected { border-color: var(--turmeric-yellow); box-shadow: 0 0 15px var(--turmeric-yellow); animation: bounce 0.5s ease; }
+        @keyframes bounce {0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+
+        /* --- SERVINGS SELECTOR --- */
+        #servings-selector { display: flex; align-items: center; justify-content: center; gap: 1rem; }
+        #servings-selector button {
+            background: var(--knob-bg); color: white; border: none; width: 50px; height: 50px;
+            border-radius: 50%; font-size: 2rem; cursor: pointer; transition: transform 0.2s;
+        }
+        #servings-selector button:hover { transform: scale(1.1); }
+        #servings-count { font-size: 3rem; font-weight: bold; min-width: 70px; }
+
+        /* --- 🍅 2 & 4. FLOATING & BOUNCING INGREDIENTS --- */
+        #ingredient-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; width: 100%; max-width: 600px; }
+        .ingredient-card {
+            background: #fff; border: 2px solid #ddd; border-radius: 10px; padding: .5rem; text-align: center;
+            cursor: pointer; transition: all .2s ease; position: relative; animation: float 6s ease-in-out infinite;
+        }
+        .ingredient-card .icon { font-size: 2.5rem; transition: transform 0.3s; }
+        .ingredient-card .name { font-size: 0.8rem; font-weight: 500; }
+        .ingredient-card.selected { border-color: var(--turmeric-yellow); box-shadow: 0 0 10px var(--turmeric-yellow); animation: bounce 0.5s ease; }
+        #custom-ingredients-box { margin-top: 1.5rem; width: 100%; max-width: 600px; }
+        #custom-ingredients-box input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .sprinkle { position: absolute; width: 5px; height: 5px; background: var(--turmeric-yellow); border-radius: 50%; animation: sprinkle-anim .6s ease-out forwards; opacity: 1; }
+        @keyframes float {0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+        @keyframes sprinkle-anim {from{opacity:1;transform:scale(1) translate(0,0)}to{opacity:0;transform:scale(0) translate(var(--tx),var(--ty))}}
+        
+        /* --- 🧍‍♂️ 6. CHEF CHOTU MASCOT --- */
+        #chef-chotu { position: absolute; bottom: 20px; right: 20px; width: 100px; height: 120px; z-index: 10; }
+        #chef-chotu svg { width: 100%; height: 100%; animation: chotu-idle 5s ease-in-out infinite; }
+        @keyframes chotu-idle {0%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}100%{transform:translateY(0) rotate(-2deg)}}
+        @keyframes chotu-nod {0%{transform:rotate(0)}50%{transform:rotate(15deg)}100%{transform:rotate(0)}}
+        @keyframes chotu-success {0%{transform:translateY(0) rotate(0) scale(1)}20%{transform:translateY(-15px) rotate(5deg) scale(1.1)}40%{transform:translateY(0) rotate(-5deg) scale(1)}60%{transform:translateY(-15px) rotate(5deg) scale(1.1)}100%{transform:translateY(0) rotate(0) scale(1)}}
+        #chotu-head { transition: transform 0.3s ease-out; }
+        
+        /* --- 8. KADHAI LOADING ANIMATION --- */
+        #recipe-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(253,245,230,.9); z-index: 50; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        #kadhai-anim { width: 200px; height: 150px; position: relative; transform: rotateX(60deg) rotateZ(-20deg); }
+        #kadhai-base { width: 150px; height: 150px; background: #555; border-radius: 50%; position: absolute; bottom: 0; left: 25px; box-shadow: inset 0 0 20px #222; }
+        .ingredient-piece { position: absolute; width: 15px; height: 15px; border-radius: 50%; left: 50%; top: 50%; }
+        .p1 { background: #e57373; animation: toss 1.5s infinite; } .p2 { background: #81c784; animation: toss 1.5s infinite .2s; }
+        .p3 { background: #fff176; animation: toss 1.5s infinite .4s; } .p4 { background: #ffb74d; animation: toss 1.5s infinite .6s; }
+        @keyframes toss {0%{transform:translate(0,20px) scale(1)}50%{transform:translate(-20px,-40px) scale(1.2)}100%{transform:translate(30px,20px) scale(1)}}
+        #loader-text { font-family: 'Kalam', cursive; font-size: 1.5rem; margin-top: 4rem; }
+
+        /* --- 🍛 10. RECIPE CARD DESIGN --- */
+        #results-screen { display: flex; flex-direction: column; height: 100%; }
+        #results-grid { flex-grow: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; padding: 1rem; overflow-y: auto; }
+        .recipe-card {
+            background-color: #fffaf0; background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+            border: 1px solid #d3c4b1; border-radius: 10px; box-shadow: 3px 3px 10px rgba(0,0,0,.1); padding: 1.5rem; position: relative;
+            opacity: 0; transform: translateY(20px); animation: fadeInCard .5s ease-out forwards; display: flex; flex-direction: column;
+        }
+        .recipe-card h3 { font-family: 'Kalam', cursive; font-size: 1.8rem; color: var(--masala-red); margin-top: 0; margin-right: 60px; }
+        .recipe-card .magnet { position: absolute; top: -15px; left: -15px; width: 30px; height: 30px; }
+        .recipe-card .score {
+            position: absolute; top: 1rem; right: 1rem; background: var(--coriander-green); color: white;
+            width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1.2rem; box-shadow: 0 0 10px var(--coriander-green);
+        }
+        .recipe-card .details { flex-grow: 1; }
+        .recipe-card .instructions-container {
+            margin-top: 1rem; border-top: 2px dashed #d3c4b1; padding-top: 1rem;
+            max-height: 0; overflow: hidden; transition: max-height 0.7s ease-in-out;
+        }
+        .recipe-card .instructions-container.visible { max-height: 500px; }
+        .recipe-card .cook-button { margin-top: auto; }
+        @keyframes fadeInCard {to{opacity:1;transform:translateY(0)}}
+        #error-message { text-align: center; padding: 2rem; background: rgba(255,0,0,0.1); border-radius: 10px; }
+
+        /* --- 🎧 9. SOUND TOGGLE & BUTTONS --- */
+        #sound-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; opacity: .5; transition: opacity .3s; z-index: 10; }
+        #sound-toggle:hover { opacity: 1; }
+        
+        #back-button {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(0,0,0,0.1); border: none; font-size: 1.8rem; line-height: 1;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            z-index: 10; transition: all 0.2s;
+        }
+        #back-button:hover { background: rgba(0,0,0,0.2); transform: scale(1.1); }
+
+        .primary-button {
+            font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.2rem; background: var(--turmeric-yellow); color: var(--charcoal-black);
+            border: none; border-radius: 50px; padding: .8rem 2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,.1); transition: all .2s ease;
+        }
+        .primary-button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,.2); }
+        .nav-buttons { margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <!-- Audio Elements -->
+    <audio id="ambient-sound" loop src="placeholder_kitchen_ambient.mp3"></audio>
+    <audio id="click-sound" src="placeholder_click.mp3"></audio>
+    <audio id="sprinkle-sound" src="placeholder_sprinkle.mp3"></audio>
+    <audio id="success-sound" src="placeholder_success.mp3"></audio>
+    <audio id="whoosh-sound" src="https://cdn.jsdelivr.net/gh/kristopolous/musicworker-tonematrix@master/snd/menu-click.mp3"></audio>
+
+    <div id="splash-screen">
+        <div id="masala-dabba"><div id="dabba-base"><div id="logo">Rasoi.AI</div></div><div id="dabba-lid"></div><div id="steam"></div></div>
+    </div>
+    <div id="recipe-loader" class="hidden">
+        <div id="kadhai-anim"><div id="kadhai-base"></div><div class="ingredient-piece p1"></div><div class="ingredient-piece p2"></div><div class="ingredient-piece p3"></div><div class="ingredient-piece p4"></div></div>
+        <div id="loader-text">Cooking up some magic...</div>
+    </div>
+
+    <main id="app-container" class="hidden">
+        <div id="stove-flame"></div>
+        <button id="back-button" class="hidden" onclick="prevStep()">←</button>
+        <button id="sound-toggle">🔇</button>
+        <div id="chef-chotu"><svg viewBox="0 0 100 120"><path d="M20 120 Q50 90 80 120 L70 50 Q50 40 30 50 Z" fill="#C62828"/><g id="chotu-head"><circle cx="50" cy="25" r="25" fill="#f0e4d7"/><circle cx="40" cy="25" r="3" fill="#333"/><circle cx="60" cy="25" r="3" fill="#333"/><path d="M45 35 Q50 40 55 35" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></g></svg></div>
+        
+        <div id="wizard-container">
+            <div id="progress-bar"><div id="progress-bar-fill"></div></div>
+            
+            <div id="step-1" class="step-container">
+                <h2>How much time do you have?</h2>
+                <div class="choice-grid">
+                    <div class="option-card" onclick="selectChoice('time', '15 min', this)"><div class="icon">⏰</div><div class="name">15 Min</div></div>
+                    <div class="option-card" onclick="selectChoice('time', '30 min', this)"><div class="icon">⏳</div><div class="name">30 Min</div></div>
+                    <div class="option-card" onclick="selectChoice('time', 'Any', this)"><div class="icon">♾️</div><div class="name">No Limit</div></div>
+                </div>
+            </div>
+
+            <div id="step-2" class="step-container hidden">
+                <h2>How many are eating?</h2>
+                <div id="servings-selector"><button onclick="updateServings(-1)">-</button><span id="servings-count">1</span><button onclick="updateServings(1)">+</button></div>
+                <div class="nav-buttons"><button class="primary-button" onclick="nextStep()">Next</button></div>
+            </div>
+            
+            <div id="step-3" class="step-container hidden">
+                <h2>Veg or Non-Veg?</h2>
+                <div class="choice-grid">
+                    <div class="option-card" onclick="selectChoice('diet', 'Vegetarian', this)"><div class="icon">🥕</div><div class="name">Vegetarian</div></div>
+                    <div class="option-card" onclick="selectChoice('diet', 'Non-Vegetarian', this)"><div class="icon">🍗</div><div class="name">Non-Veg</div></div>
+                </div>
+            </div>
+
+            <div id="step-4" class="step-container hidden">
+                <h2>How will you eat it?</h2>
+                <div class="choice-grid">
+                    <div class="option-card" onclick="selectChoice('accompaniment', 'Bread', this)"><div class="icon">🍞</div><div class="name">With Bread</div></div>
+                    <div class="option-card" onclick="selectChoice('accompaniment', 'Rice', this)"><div class="icon">🍚</div><div class="name">With Rice</div></div>
+                    <div class="option-card" onclick="selectChoice('accompaniment', 'Itself', this)"><div class="icon">🥣</div><div class="name">By Itself</div></div>
+                </div>
+            </div>
+
+            <div id="step-5" class="step-container hidden">
+                <h2>What's the spice level?</h2>
+                <div class="choice-grid">
+                    <div class="option-card" onclick="selectChoice('spice', 'Mild', this)"><div class="icon">🌶️</div><div class="name">Mild</div></div>
+                    <div class="option-card" onclick="selectChoice('spice', 'Medium', this)"><div class="icon">🌶️🌶️</div><div class="name">Medium</div></div>
+                    <div class="option-card" onclick="selectChoice('spice', 'Spicy', this)"><div class="icon">🌶️🌶️🌶️</div><div class="name">Spicy</div></div>
+                </div>
+            </div>
+
+            <div id="step-6" class="step-container hidden">
+                <h2>Curry or Fried?</h2>
+                <div class="choice-grid">
+                    <div class="option-card" onclick="selectChoice('texture', 'Curry', this)"><div class="icon">🍲</div><div class="name">Curry / Gravy</div></div>
+                    <div class="option-card" onclick="selectChoice('texture', 'Fried', this)"><div class="icon">🍳</div><div class="name">Fried / Dry</div></div>
+                </div>
+            </div>
+
+            <div id="step-7" class="step-container hidden">
+                 <h2>What's in your kitchen?</h2>
+                 <p class="subtitle">Select what you have. More is better!</p>
+                 <div id="ingredient-grid"></div>
+                 <div id="custom-ingredients-box"><input type="text" id="custom-ingredients" placeholder="Type other ingredients, e.g., paneer, mushroom"></div>
+                 <div class="nav-buttons"><button class="primary-button" onclick="getRecipeIdeas()">Find My Recipes!</button></div>
+            </div>
+        </div>
+        
+        <div id="results-screen" class="hidden">
+            <div class="text-center mb-4"><h2 style="font-family:'Kalam',cursive;font-size:2.5rem">Your Recipe Ideas!</h2><button class="primary-button -mt-2" onclick="restartApp()">Start Over</button></div>
+            <div id="results-grid"></div>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- ELEMENTS ---
+        const splashScreen = document.getElementById('splash-screen');
+        const appContainer = document.getElementById('app-container');
+        const ingredientGrid = document.getElementById('ingredient-grid');
+        const wizardContainer = document.getElementById('wizard-container');
+        const resultsScreen = document.getElementById('results-screen');
+        const resultsGrid = document.getElementById('results-grid');
+        const recipeLoader = document.getElementById('recipe-loader');
+        const chotuHead = document.getElementById('chotu-head');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const backButton = document.getElementById('back-button');
+        
+        // --- SOUND ELEMENTS & CONTROL ---
+        const soundToggle = document.getElementById('sound-toggle');
+        const allSounds = document.querySelectorAll('audio');
+        let soundEnabled = false;
+
+        soundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+            const ambientSound = document.getElementById('ambient-sound');
+            if (soundEnabled) {
+                ambientSound.play().catch(e => console.warn("Audio autoplay blocked."));
+            } else {
+                allSounds.forEach(sound => sound.pause());
+            }
+        });
+
+        function playSound(soundId) {
+            if (soundEnabled) {
+                const sound = document.getElementById(soundId);
+                if(sound) {
+                    sound.currentTime = 0;
+                    sound.play().catch(e => {/*ignore block by browser*/});
+                }
+            }
+        }
+        
+        document.body.addEventListener('click', (e) => {
+            if(e.target.closest('button, .option-card, .ingredient-card')) {
+                playSound('whoosh-sound');
+            }
+        });
+
+        // --- APP STATE ---
+        const totalSteps = 7;
+        let currentStep = 1;
+        const userSelections = { time: null, servings: 1, diet: null, accompaniment: null, spice: null, texture: null, ingredients: new Set(), customIngredients: '' };
+
+        // --- INITIALIZATION ---
+        setTimeout(() => {
+            splashScreen.style.opacity = '0';
+            appContainer.classList.remove('hidden');
+        }, 3000);
+        setTimeout(() => splashScreen.remove(), 3500);
+        
+        populateIngredients();
+        updateProgressBar();
+
+        // --- WIZARD NAVIGATION ---
+        window.nextStep = function() {
+            if (currentStep < totalSteps) {
+                const currentEl = document.getElementById(`step-${currentStep}`);
+                currentEl.classList.add('slide-out');
+                
+                setTimeout(() => {
+                    currentEl.classList.add('hidden');
+                    currentEl.classList.remove('slide-out');
+
+                    currentStep++;
+                    const nextEl = document.getElementById(`step-${currentStep}`);
+                    nextEl.classList.remove('hidden');
+                    nextEl.classList.remove('slide-in-reverse'); // Ensure correct animation direction
+                    updateUIForStep();
+                }, 500);
+            }
+        }
+        
+        window.prevStep = function() {
+            if (currentStep > 1) {
+                const currentEl = document.getElementById(`step-${currentStep}`);
+                currentEl.classList.add('slide-out');
+
+                setTimeout(() => {
+                    currentEl.classList.add('hidden');
+                    currentEl.classList.remove('slide-out');
+                    
+                    currentStep--;
+                    const prevEl = document.getElementById(`step-${currentStep}`);
+                    prevEl.classList.remove('hidden');
+                    prevEl.classList.add('slide-in-reverse');
+                    updateUIForStep();
+                }, 500);
+            }
+        }
+        
+        function updateUIForStep() {
+            updateProgressBar();
+            animateChotuNod();
+            backButton.classList.toggle('hidden', currentStep <= 1);
+        }
+
+        function updateProgressBar() { progressBarFill.style.width = `${(currentStep / totalSteps) * 100}%`; }
+
+        // --- STEP-SPECIFIC LOGIC ---
+        window.updateServings = function(change) {
+            userSelections.servings += change;
+            if (userSelections.servings < 1) userSelections.servings = 1;
+            document.getElementById('servings-count').innerText = userSelections.servings;
+            playSound('click-sound');
+        }
+        
+        window.selectChoice = function(key, value, element) {
+            userSelections[key] = value;
+            const parent = element.parentElement;
+            parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            setTimeout(nextStep, 300);
+        }
+
+        function populateIngredients() {
+            const ingredients = [
+                { name: 'Onion', img: '🧅' }, { name: 'Tomato', img: '🍅' }, { name: 'Potato', img: '🥔' },
+                { name: 'Garlic', img: '🧄' }, { name: 'Ginger', img: '🍠' }, { name: 'Chilli', img: '🌶️' },
+                { name: 'Coriander', img: '🌿' }, { name: 'Lentils', img: '🥣' }, { name: 'Chicken', img: '🍗' },
+                { name: 'Eggs', img: '🥚' }, { name: 'Paneer', img: '🧀' }, { name: 'Yogurt', img: '🥛' }
+            ];
+            ingredients.forEach((ing, i) => {
+                const card = document.createElement('div');
+                card.className = 'ingredient-card';
+                card.style.animationDelay = `${i * 0.1}s`;
+                card.innerHTML = `<div class="icon">${ing.img}</div><div class="name">${ing.name}</div>`;
+                card.onclick = () => {
+                    card.classList.toggle('selected');
+                    if (card.classList.contains('selected')) {
+                        userSelections.ingredients.add(ing.name);
+                        createSprinkleEffect(card);
+                        playSound('sprinkle-sound');
+                    } else { userSelections.ingredients.delete(ing.name); }
+                };
+                ingredientGrid.appendChild(card);
+            });
+        }
+
+        function createSprinkleEffect(parent) {
+            for (let i = 0; i < 10; i++) {
+                const s = document.createElement('div');
+                s.className = 'sprinkle';
+                s.style.setProperty('--tx', `${(Math.random()-.5)*80}px`);
+                s.style.setProperty('--ty', `${(Math.random()-.5)*80}px`);
+                parent.appendChild(s);
+                setTimeout(()=>s.remove(),600);
+            }
+        }
+
+        // --- MASCOT ANIMATIONS (🧍‍♂️) ---
+        function animateChotuNod() { chotuHead.style.animation = 'chotu-nod .5s ease-in-out'; setTimeout(()=>chotuHead.style.animation='',500); }
+        function animateChotuSuccess() { const s=document.querySelector("#chef-chotu svg");s.style.animation='chotu-success 1s ease-in-out';setTimeout(()=>s.style.animation='chotu-idle 5s ease-in-out infinite',1000); }
+        
+        // --- API CALL & RESULTS (🍛) ---
+        const groqApiKey = "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"; // Your Groq API key
+        const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
+
+        async function callGroqAPI(systemPrompt, userPrompt) {
+            if (!groqApiKey || groqApiKey.length < 10) {
+                return { error: "Groq API key is not set. Please add your key in the script." };
+            }
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${groqApiKey}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: "llama3-8b-8192",
+                        messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt }],
+                        temperature: 0.7,
+                        response_format: { type: "json_object" }
+                    })
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Error (${response.status}): ${errorData.error.message}`);
+                }
+                const result = await response.json();
+                const content = result.choices[0]?.message?.content;
+                if (!content) throw new Error("API returned empty content.");
+                return JSON.parse(content);
+            } catch (error) {
+                console.error("Groq API call failed:", error);
+                return { error: `Failed to fetch from AI: ${error.message}` };
+            }
+        }
+
+        function displayError(message) {
+            resultsGrid.innerHTML = `<div id="error-message"><h3>Oops! Something went wrong.</h3><p>${message}</p></div>`;
+        }
+
+        window.getRecipeIdeas = async function() {
+            wizardContainer.classList.add('hidden');
+            recipeLoader.classList.remove('hidden');
+            backButton.classList.add('hidden');
+            
+            userSelections.customIngredients = document.getElementById('custom-ingredients').value;
+            const allIngredients = Array.from(userSelections.ingredients).concat(userSelections.customIngredients.split(',').map(s=>s.trim()).filter(Boolean)).join(', ');
+
+            const systemPrompt = `You are Rasoi.AI, an expert Indian chef. Generate 3 distinct recipe ideas based on the user's criteria. You MUST ONLY output a valid JSON object containing a single key "recipes" which is an array of 3 objects. Do not add any text, explanation, or markdown formatting before or after the JSON. Each object must have these exact keys: "recipeName", "tasteScore", "cookingTime", "accompanimentSuggestion", "keyIngredients". The tasteScore is an efficiency score out of 100.`;
+            const userPrompt = `Criteria: Time: ${userSelections.time}, Servings: ${userSelections.servings}, Diet: ${userSelections.diet}, Accompaniment: ${userSelections.accompaniment}, Spice: ${userSelections.spice}, Texture: ${userSelections.texture}, Available Ingredients: ${allIngredients}.`;
+            
+            const response = await callGroqAPI(systemPrompt, userPrompt);
+            
+            if (response && response.recipes) {
+                displayRecipeIdeas(response.recipes);
+                animateChotuSuccess();
+                playSound('success-sound');
+            } else {
+                 displayError(response.error || "Could not fetch recipes. Please try again.");
+            }
+            recipeLoader.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+        }
+
+        function displayRecipeIdeas(recipes) {
+            resultsGrid.innerHTML = '';
+            recipes.forEach((recipe, i) => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.style.animationDelay = `${i * 0.2}s`;
+                const safeRecipeName = JSON.stringify(recipe.recipeName);
+                card.innerHTML = `
+                    <svg class="magnet" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#e57373"/><circle cx="50" cy="50" r="30" fill="#f06292"/></svg>
+                    <div class="score">${recipe.tasteScore}</div>
+                    <div class="details">
+                        <h3>${recipe.recipeName}</h3>
+                        <p><strong>Time:</strong> ${recipe.cookingTime} &nbsp;&nbsp; <strong>Best with:</strong> ${recipe.accompanimentSuggestion}</p>
+                        <p><strong>Key Ingredients:</strong> ${recipe.keyIngredients.join(', ')}</p>
+                    </div>
+                    <div class="instructions-container"></div>
+                    <button class="primary-button cook-button" onclick="getInstructions(this, ${safeRecipeName})">Cook!</button>
+                `;
+                resultsGrid.appendChild(card);
+            });
+        }
+
+        window.getInstructions = async function(button, recipeName) {
+            button.disabled = true;
+            button.textContent = "Getting Steps...";
+            
+            const systemPrompt = `You are Rasoi.AI. Provide short, efficient, step-by-step cooking instructions for a specific recipe, tailored for a bachelor. You MUST ONLY output a valid JSON object with a single key "instructions" which is an array of strings. Do not add any text, explanation, or markdown formatting.`;
+            const userPrompt = `Recipe: "${recipeName}". All previous user criteria apply. Provide the cooking steps.`;
+            
+            const response = await callGroqAPI(systemPrompt, userPrompt);
+            
+            if (response && response.instructions) {
+                const container = button.parentElement.querySelector('.instructions-container');
+                container.innerHTML = `<ol class="pl-5 mt-2">${response.instructions.map(inst => `<li>${inst}</li>`).join('')}</ol>`;
+                container.classList.add('visible');
+                button.textContent = "Steps Shown!";
+            } else {
+                button.textContent = "Try Again";
+                button.disabled = false;
+            }
+        }
+        
+        window.restartApp = function() {
+            resultsScreen.classList.add('hidden');
+            wizardContainer.classList.remove('hidden');
+            document.querySelectorAll('.step-container').forEach(s=>s.classList.add('hidden'));
+            currentStep = 1;
+            document.getElementById(`step-1`).classList.remove('hidden');
+            Object.assign(userSelections, { time: null, servings: 1, diet: null, accompaniment: null, spice: null, texture: null, ingredients: new Set(), customIngredients: '' });
+            document.querySelectorAll('.selected').forEach(c => c.classList.remove('selected'));
+            document.getElementById('custom-ingredients').value = '';
+            document.getElementById('servings-count').innerText = '1';
+            updateUIForStep();
+        }
+    });
+    </script>
+</body>
+</html>
