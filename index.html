@@ -256,7 +256,6 @@
     </style>
 </head>
 <body>
-    <!-- Audio Elements -->
     <audio id="ambient-sound" loop src="placeholder_kitchen_ambient.mp3"></audio>
     <audio id="click-sound" src="placeholder_click.mp3"></audio>
     <audio id="sprinkle-sound" src="placeholder_sprinkle.mp3"></audio>
@@ -506,42 +505,37 @@
         function animateChotuSuccess() { const s=document.querySelector("#chef-chotu svg");s.style.animation='chotu-success 1s ease-in-out';setTimeout(()=>s.style.animation='chotu-idle 5s ease-in-out infinite',1000); }
         
         // --- API CALL & RESULTS (🍛) ---
-        const groqApiKey = "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"; // Your Groq API key
-        const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
+        
+        // ** THIS IS THE UPDATED SECTION FOR NETLIFY **
 
-        async function callGroqAPI(systemPrompt, userPrompt) {
-            if (!groqApiKey || groqApiKey.length < 10) {
-                return { error: "Groq API key is not set. Please add your key in the script." };
-            }
+        // This function talks to our secure "middleman" function on Netlify
+        async function callApiFunction(body) {
             try {
-                const response = await fetch(apiUrl, {
+                // This URL is specific to Netlify functions and must be exact
+                const response = await fetch('/.netlify/functions/getRecipes', {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${groqApiKey}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        model: "llama3-8b-8192",
-                        messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt }],
-                        temperature: 0.7,
-                        response_format: { type: "json_object" }
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body) // Send the prompts to our function
                 });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`API Error (${response.status}): ${errorData.error.message}`);
-                }
+        
                 const result = await response.json();
+        
+                if (!response.ok) {
+                    throw new Error(result.error || `Server error (${response.status})`);
+                }
+                
+                // The function returns the full Groq response, so we parse it here
                 const content = result.choices[0]?.message?.content;
                 if (!content) throw new Error("API returned empty content.");
                 return JSON.parse(content);
+    
             } catch (error) {
-                console.error("Groq API call failed:", error);
-                return { error: `Failed to fetch from AI: ${error.message}` };
+                console.error("Netlify function call failed:", error);
+                return { error: `Failed to get recipes: ${error.message}` };
             }
         }
-
-        function displayError(message) {
-            resultsGrid.innerHTML = `<div id="error-message"><h3>Oops! Something went wrong.</h3><p>${message}</p></div>`;
-        }
-
+    
+        // This function is UPDATED to use our new callApiFunction
         window.getRecipeIdeas = async function() {
             wizardContainer.classList.add('hidden');
             recipeLoader.classList.remove('hidden');
@@ -549,11 +543,11 @@
             
             userSelections.customIngredients = document.getElementById('custom-ingredients').value;
             const allIngredients = Array.from(userSelections.ingredients).concat(userSelections.customIngredients.split(',').map(s=>s.trim()).filter(Boolean)).join(', ');
-
+    
             const systemPrompt = `You are Rasoi.AI, an expert Indian chef. Generate 3 distinct recipe ideas based on the user's criteria. You MUST ONLY output a valid JSON object containing a single key "recipes" which is an array of 3 objects. Do not add any text, explanation, or markdown formatting before or after the JSON. Each object must have these exact keys: "recipeName", "tasteScore", "cookingTime", "accompanimentSuggestion", "keyIngredients". The tasteScore is an efficiency score out of 100.`;
             const userPrompt = `Criteria: Time: ${userSelections.time}, Servings: ${userSelections.servings}, Diet: ${userSelections.diet}, Accompaniment: ${userSelections.accompaniment}, Spice: ${userSelections.spice}, Texture: ${userSelections.texture}, Available Ingredients: ${allIngredients}.`;
             
-            const response = await callGroqAPI(systemPrompt, userPrompt);
+            const response = await callApiFunction({ systemPrompt, userPrompt });
             
             if (response && response.recipes) {
                 displayRecipeIdeas(response.recipes);
@@ -564,6 +558,31 @@
             }
             recipeLoader.classList.add('hidden');
             resultsScreen.classList.remove('hidden');
+        }
+    
+        // This function is also UPDATED to use our new callApiFunction
+        window.getInstructions = async function(button, recipeName) {
+            button.disabled = true;
+            button.textContent = "Getting Steps...";
+            
+            const systemPrompt = `You are Rasoi.AI. Provide short, efficient, step-by-step cooking instructions for a specific recipe, tailored for a bachelor. You MUST ONLY output a valid JSON object with a single key "instructions" which is an array of strings. Do not add any text, explanation, or markdown formatting.`;
+            const userPrompt = `Recipe: "${recipeName}". All previous user criteria apply. Provide the cooking steps.`;
+            
+            const response = await callApiFunction({ systemPrompt, userPrompt });
+            
+            if (response && response.instructions) {
+                const container = button.parentElement.querySelector('.instructions-container');
+                container.innerHTML = `<ol class="pl-5 mt-2">${response.instructions.map(inst => `<li>${inst}</li>`).join('')}</ol>`;
+                container.classList.add('visible');
+                button.textContent = "Steps Shown!";
+            } else {
+                button.textContent = "Try Again";
+                button.disabled = false;
+            }
+        }
+
+        function displayError(message) {
+            resultsGrid.innerHTML = `<div id="error-message"><h3>Oops! Something went wrong.</h3><p>${message}</p></div>`;
         }
 
         function displayRecipeIdeas(recipes) {
@@ -586,26 +605,6 @@
                 `;
                 resultsGrid.appendChild(card);
             });
-        }
-
-        window.getInstructions = async function(button, recipeName) {
-            button.disabled = true;
-            button.textContent = "Getting Steps...";
-            
-            const systemPrompt = `You are Rasoi.AI. Provide short, efficient, step-by-step cooking instructions for a specific recipe, tailored for a bachelor. You MUST ONLY output a valid JSON object with a single key "instructions" which is an array of strings. Do not add any text, explanation, or markdown formatting.`;
-            const userPrompt = `Recipe: "${recipeName}". All previous user criteria apply. Provide the cooking steps.`;
-            
-            const response = await callGroqAPI(systemPrompt, userPrompt);
-            
-            if (response && response.instructions) {
-                const container = button.parentElement.querySelector('.instructions-container');
-                container.innerHTML = `<ol class="pl-5 mt-2">${response.instructions.map(inst => `<li>${inst}</li>`).join('')}</ol>`;
-                container.classList.add('visible');
-                button.textContent = "Steps Shown!";
-            } else {
-                button.textContent = "Try Again";
-                button.disabled = false;
-            }
         }
         
         window.restartApp = function() {
