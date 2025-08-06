@@ -11,17 +11,7 @@
         :root { --turmeric-yellow: #FFC107; --masala-red: #C62828; --coriander-green: #4CAF50; --warm-cream: #FDF5E6; --charcoal-black: #333333; --knob-bg: #212121; --steel: #c5c9d1; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--warm-cream); color: var(--charcoal-black); margin: 0; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .hidden { display: none !important; }
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--warm-cream); z-index: 100; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease-out 2.5s; }
-        #masala-dabba { width: 250px; height: 250px; position: relative; }
-        #dabba-base { width: 100%; height: 100%; background: var(--steel); border: 4px solid #aaa; border-radius: 50%; box-shadow: inset 0 0 20px rgba(0,0,0,0.2), 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
-        #logo { font-family: 'Kalam', cursive; font-size: 3rem; color: var(--masala-red); opacity: 0; animation: fadeInLogo 1s ease-in 1.5s forwards; }
-        #dabba-lid { width: 100%; height: 100%; background: #e0e4eb; border: 4px solid #aaa; border-radius: 50%; position: absolute; top: 0; left: 0; transform-origin: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: openLid 2s ease-in-out 0.5s forwards; }
-        #steam { position: absolute; width: 100px; height: 150px; top: -100px; left: 50%; transform: translateX(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Cpath d='M20 150 C 20 100, 80 100, 80 150' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M30 150 C 30 110, 70 110, 70 150' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M40 150 C 40 120, 60 120, 60 150' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center center; opacity: 0; animation: riseSteam 2s ease-out 1.5s forwards; }
-        @keyframes openLid {0%{transform:translateY(0) rotate(0deg) scale(1)}50%{transform:translateY(-20px) rotate(15deg) scale(1.05)}100%{transform:translateY(150px) rotate(90deg) scale(.5);opacity:0}}
-        @keyframes fadeInLogo {from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-        @keyframes riseSteam {0%{transform:translateY(0) scale(.5);opacity:0}50%{opacity:.8}100%{transform:translateY(-100px) scale(1.2);opacity:0}}
-        #app-container { width: 100%; max-width: 900px; height: 95vh; max-height: 700px; background-image: url('https://www.transparenttextures.com/patterns/concrete-wall-3.png'), linear-gradient(to bottom, #fdf5e6, #f7e9d4); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,0,0,0.05); border: 1px solid #d3c4b1; position: relative; padding: 2rem; display: flex; flex-direction: column; opacity: 0; transform: scale(0.95); animation: fadeInApp 0.5s ease-out 3s forwards; }
-        @keyframes fadeInApp {to{opacity:1;transform:scale(1)}}
+        #app-container { width: 100%; max-width: 900px; height: 95vh; max-height: 700px; background-image: url('https://www.transparenttextures.com/patterns/concrete-wall-3.png'), linear-gradient(to bottom, #fdf5e6, #f7e9d4); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,0,0,0.05); border: 1px solid #d3c4b1; position: relative; padding: 2rem; display: flex; flex-direction: column; }
         #stove-flame { position: absolute; bottom: 10px; left: 20px; width: 80px; height: 100px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath d='M40,100 C70,70 70,30 40,0 C10,30 10,70 40,100 Z' fill='%2387ceeb'/%3E%3Cpath d='M40,100 C60,75 60,45 40,20 C20,45 20,75 40,100 Z' fill='%231e90ff'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; animation: flicker 0.2s infinite alternate; }
         @keyframes flicker {0%{transform:scale(1,1) rotate(-1deg);opacity:.8}50%{transform:scale(.95,1.05);opacity:1}100%{transform:scale(1.05,.95) rotate(1deg);opacity:.9}}
         #wizard-container { width: 100%; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -47,14 +37,14 @@
         #servings-selector button:hover { transform: scale(1.1); }
         #servings-count { font-size: 3rem; font-weight: bold; min-width: 70px; }
         .ingredient-category-title { font-family: 'Kalam', cursive; color: var(--masala-red); font-size: 1.5rem; margin-bottom: 0.5rem; margin-top: 1rem; text-align: left; width: 100%; max-width: 600px; }
-        #step-7-content { width: 100%; max-height: calc(100% - 150px); overflow-y: auto; padding: 0 1rem; }
+        #step-7-content { width: 100%; max-height: calc(100% - 220px); overflow-y: auto; padding: 0 1rem; }
         .ingredient-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; width: 100%; max-width: 600px; }
         .ingredient-card { background: #fff; border: 2px solid #ddd; border-radius: 10px; padding: .5rem; text-align: center; cursor: pointer; transition: all .2s ease; position: relative; animation: float 6s ease-in-out infinite; }
         .ingredient-card .icon { font-size: 2.5rem; transition: transform 0.3s; }
         .ingredient-card .name { font-size: 0.8rem; font-weight: 500; }
         .ingredient-card.selected { border-color: var(--turmeric-yellow); box-shadow: 0 0 10px var(--turmeric-yellow); animation: bounce 0.5s ease; }
-        #custom-ingredients-box { margin-top: 1.5rem; width: 100%; max-width: 600px; }
-        #custom-ingredients-box input { width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
+        #custom-ingredients-box, .preferences-box { margin-top: 1rem; width: 100%; max-width: 600px; }
+        #custom-ingredients-box input, .preferences-box textarea { width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         .sprinkle { position: absolute; width: 5px; height: 5px; background: var(--turmeric-yellow); border-radius: 50%; animation: sprinkle-anim .6s ease-out forwards; opacity: 1; }
         @keyframes float {0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
         @keyframes sprinkle-anim {from{opacity:1;transform:scale(1) translate(0,0)}to{opacity:0;transform:scale(0) translate(var(--tx),var(--ty))}}
@@ -90,30 +80,28 @@
         #back-button:hover { background: rgba(0,0,0,0.2); transform: scale(1.1); }
         .primary-button { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.2rem; background: var(--turmeric-yellow); color: var(--charcoal-black); border: none; border-radius: 50px; padding: .8rem 2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,.1); transition: all .2s ease; }
         .primary-button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,.2); }
-        .nav-buttons { margin-top: 2rem; }
-    </style>
-</head>
-<body>
+        .nav-buttons { margin-top: auto; padding-top: 1rem; width: 100%; max-width: 600px; }
+        #fast-food-custom-input { width: 100%; max-width: 400px; padding: 0.8rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; margin-top: 1rem; }
+     </style>
+ </head>
+ <body>
     <audio id="ambient-sound" loop src="placeholder_kitchen_ambient.mp3"></audio>
     <audio id="click-sound" src="placeholder_click.mp3"></audio>
     <audio id="sprinkle-sound" src="placeholder_sprinkle.mp3"></audio>
     <audio id="success-sound" src="placeholder_success.mp3"></audio>
     <audio id="whoosh-sound" src="https://cdn.jsdelivr.net/gh/kristopolous/musicworker-tonematrix@master/snd/menu-click.mp3"></audio>
 
-    <div id="splash-screen">
-        <div id="masala-dabba"><div id="dabba-base"><div id="logo">Rasoi.AI</div></div><div id="dabba-lid"></div><div id="steam"></div></div>
-    </div>
     <div id="recipe-loader" class="hidden">
         <div id="kadhai-anim"><div id="kadhai-base"></div><div class="ingredient-piece p1"></div><div class="ingredient-piece p2"></div><div class="ingredient-piece p3"></div><div class="ingredient-piece p4"></div></div>
         <div id="loader-text">Cooking up some magic...</div>
     </div>
 
-    <main id="app-container" class="hidden">
+    <main id="app-container">
         <div id="stove-flame"></div>
         <button id="back-button" class="hidden" onclick="prevStep()">←</button>
         <button id="sound-toggle">🔇</button>
         <div id="chef-chotu"><svg viewBox="0 0 100 120"><path d="M20 120 Q50 90 80 120 L70 50 Q50 40 30 50 Z" fill="#C62828"/><g id="chotu-head"><circle cx="50" cy="25" r="25" fill="#f0e4d7"/><circle cx="40" cy="25" r="3" fill="#333"/><circle cx="60" cy="25" r="3" fill="#333"/><path d="M45 35 Q50 40 55 35" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></g></svg></div>
-        
+
         <div id="wizard-container">
             <div id="progress-bar"><div id="progress-bar-fill"></div></div>
             
@@ -143,12 +131,25 @@
 
             <div id="step-fastfood" class="step-container hidden">
                 <h2>Choose a Fast Food</h2>
-                <div class="choice-grid">
-                    <div class="option-card" onclick="getFastFoodRecipe('Maggie Noodles', this)"><div class="icon">🍜</div><div class="name">Maggie</div></div>
+                <div class="choice-grid" style="max-height: 250px; overflow-y: auto; padding: 10px; width:100%; max-width: 600px;">
+                    <div class="option-card" onclick="getFastFoodRecipe('Samosa', this)"><div class="icon">🥟</div><div class="name">Samosa</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Vada Pav', this)"><div class="icon">🍔</div><div class="name">Vada Pav</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Chole Bhature', this)"><div class="icon">🫘</div><div class="name">Chole Bhature</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Pav Bhaji', this)"><div class="icon">🥣</div><div class="name">Pav Bhaji</div></div>
                     <div class="option-card" onclick="getFastFoodRecipe('Momos', this)"><div class="icon">🥟</div><div class="name">Momos</div></div>
-                    <div class="option-card" onclick="getFastFoodRecipe('Golgappa / Panipuri', this)"><div class="icon">🍘</div><div class="name">Golgappa</div></div>
-                    <div class="option-card" onclick="getFastFoodRecipe('Bread Pakora', this)"><div class="icon">🍞</div><div class="name">Bread Pakora</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Panipuri', this)"><div class="icon">🍘</div><div class="name">Panipuri</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Aloo Tikki Chaat', this)"><div class="icon">🥔</div><div class="name">Aloo Tikki</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Kathi Roll', this)"><div class="icon">🌯</div><div class="name">Kathi Roll</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Pakora', this)"><div class="icon">🧅</div><div class="name">Pakora</div></div>
+                    <div class="option-card" onclick="getFastFoodRecipe('Chowmein', this)"><div class="icon">🍝</div><div class="name">Chowmein</div></div>
                 </div>
+                <div id="custom-ingredients-box">
+                    <input type="text" id="fast-food-custom-input" placeholder="Or type another fast food...">
+                </div>
+                <div class="preferences-box">
+                     <textarea id="special-preferences-fastfood" rows="2" placeholder="Any special preferences? (e.g., less oily, more spicy)"></textarea>
+                </div>
+                <div class="nav-buttons"><button class="primary-button" onclick="getCustomFastFoodRecipe()">Get Recipe</button></div>
             </div>
 
             <div id="step-4" class="step-container hidden">
@@ -187,10 +188,15 @@
                     <div id="veggies-grid" class="ingredient-grid"></div>
                     <h3 class="ingredient-category-title">Dairy Products</h3>
                     <div id="dairy-grid" class="ingredient-grid"></div>
-                    <h3 class="ingredient-category-title">Non-Veg</h3>
-                    <div id="nonveg-grid" class="ingredient-grid"></div>
+                    <div id="nonveg-section">
+                        <h3 class="ingredient-category-title">Non-Veg</h3>
+                        <div id="nonveg-grid" class="ingredient-grid"></div>
+                    </div>
                  </div>
                  <div id="custom-ingredients-box"><input type="text" id="custom-ingredients" placeholder="Type other ingredients, e.g., soy sauce"></div>
+                 <div class="preferences-box">
+                     <textarea id="special-preferences-regular" rows="2" placeholder="Any special preferences? (e.g., less oily, more gravy)"></textarea>
+                 </div>
                  <div class="nav-buttons"><button class="primary-button" onclick="getRecipeIdeas()">Find My Recipes!</button></div>
             </div>
         </div>
@@ -203,7 +209,6 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const splashScreen = document.getElementById('splash-screen');
         const appContainer = document.getElementById('app-container');
         const wizardContainer = document.getElementById('wizard-container');
         const resultsScreen = document.getElementById('results-screen');
@@ -238,18 +243,14 @@
         const totalSteps = 7;
         let currentStep = 1;
         let isFastFoodFlow = false;
-        const userSelections = { time: null, servings: 1, diet: null, accompaniment: null, spice: null, texture: null, ingredients: new Set(), customIngredients: '' };
+        const userSelections = { time: null, servings: 1, diet: null, accompaniment: null, spice: null, texture: null, ingredients: new Set(), customIngredients: '', preferences: '' };
 
-        setTimeout(() => {
-            splashScreen.style.opacity = '0';
-            appContainer.classList.remove('hidden');
-        }, 3000);
-        setTimeout(() => splashScreen.remove(), 3500);
+        showStep('step-1');
         
         populateIngredients();
         updateProgressBar();
 
-        function showStep(stepNum, direction = 'forward') {
+        function showStep(stepId, direction = 'forward') {
             const currentEl = document.querySelector('.step-container:not(.hidden)');
             if (currentEl) {
                 currentEl.classList.add('slide-out');
@@ -260,7 +261,7 @@
             }
             
             setTimeout(() => {
-                const nextEl = document.getElementById(stepNum);
+                const nextEl = document.getElementById(stepId);
                 nextEl.classList.remove('hidden');
                 if (direction === 'backward') {
                     nextEl.classList.add('slide-in-reverse');
@@ -274,6 +275,11 @@
         window.nextStep = function() {
             if (currentStep < totalSteps) {
                 currentStep++;
+                if (userSelections.diet === 'Vegetarian' && currentStep === 7) {
+                    document.getElementById('nonveg-section').style.display = 'none';
+                } else {
+                    document.getElementById('nonveg-section').style.display = 'block';
+                }
                 showStep(`step-${currentStep}`);
             }
         }
@@ -294,11 +300,11 @@
         function updateUIForStep() {
             updateProgressBar();
             animateChotuNod();
-            backButton.classList.toggle('hidden', currentStep <= 1);
+            backButton.classList.toggle('hidden', (currentStep <= 1 && !isFastFoodFlow) || resultsScreen.classList.contains('hidden') === false);
         }
 
         function updateProgressBar() {
-            let progress = isFastFoodFlow ? 1 : (currentStep / totalSteps);
+            let progress = isFastFoodFlow ? 0.5 : (currentStep / totalSteps);
             progressBarFill.style.width = `${progress * 100}%`;
         }
 
@@ -322,20 +328,22 @@
             const parent = element.parentElement;
             parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
-            currentStep = 3;
+            currentStep = 3; 
             showStep('step-fastfood');
         }
 
         function populateIngredients() {
             const ingredients = {
-                essentials: [ { name: 'Onion', img: '🧅' }, { name: 'Garlic', img: '🧄' }, { name: 'Ginger', img: '🍠' }, { name: 'Green Chilli', img: '🌶️' }, { name: 'Coriander', img: '🌿' }, { name: 'Spices', img: '🌶️' } ],
-                veggies: [ { name: 'Tomato', img: '🍅' }, { name: 'Potato', img: '🥔' }, { name: 'Carrot', img: '🥕' }, { name: 'Bell Pepper', img: '🫑' }, { name: 'Spinach', img: '🥬' } ],
-                dairy: [ { name: 'Paneer', img: '🧀' }, { name: 'Yogurt', img: '🥛' }, { name: 'Milk', img: '🍼' } ],
-                nonveg: [ { name: 'Chicken', img: '🍗' }, { name: 'Eggs', img: '🥚' }, { name: 'Fish', img: '🐟' } ]
+                essentials: [ { name: 'Onion', img: '🧅' }, { name: 'Tomato', img: '🍅' }, { name: 'Garlic', img: '🧄' }, { name: 'Ginger', img: '🍠' }, { name: 'Green Chilli', img: '🌶️' }, { name: 'Coriander', img: '🌿' }, { name: 'Spices', img: '🌶️' } ],
+                veggies: [ { name: 'Potato', img: '🥔' }, { name: 'Carrot', img: '🥕' }, { name: 'Bell Pepper', img: '🫑' }, { name: 'Spinach', img: '🥬' }, { name: 'Cauliflower', img: '🥦' }, { name: 'Okra (Bhindi)', img: '🍆' }, { name: 'Eggplant', img: '🍆' }, { name: 'Peas', img: '🟢' }, { name: 'Mushroom', img: '🍄' }, { name: 'Cabbage', img: '🥬' } ],
+                dairy: [ { name: 'Paneer', img: '🧀' }, { name: 'Yogurt', img: '🥛' }, { name: 'Milk', img: '🍼' }, { name: 'Cheese', img: '🧀' } ],
+                nonveg: [ { name: 'Chicken', img: '🍗' }, { name: 'Mutton', img: '🐏' }, { name: 'Eggs', img: '🥚' }, { name: 'Fish', img: '🐟' } ]
             };
 
             for (const category in ingredients) {
                 const grid = document.getElementById(`${category}-grid`);
+                if (!grid) continue;
+                grid.innerHTML = '';
                 ingredients[category].forEach((ing, i) => {
                     const card = document.createElement('div');
                     card.className = 'ingredient-card';
@@ -401,11 +409,11 @@
             backButton.classList.add('hidden');
             
             userSelections.customIngredients = document.getElementById('custom-ingredients').value;
-            const allIngredients = Array.from(userSelections.ingredients).join(', ');
-            const mainIngredients = Array.from(userSelections.ingredients).filter(i => !['Onion', 'Garlic', 'Ginger', 'Green Chilli', 'Coriander', 'Spices'].includes(i)).join(', ');
+            userSelections.preferences = document.getElementById('special-preferences-regular').value;
+            const mainIngredients = Array.from(userSelections.ingredients).filter(i => !['Onion', 'Tomato', 'Garlic', 'Ginger', 'Green Chilli', 'Coriander', 'Spices'].includes(i)).join(', ');
 
-            const systemPrompt = `You are Rasoi.AI. Generate 3 distinct recipe ideas. Base the recipes primarily on the "Main Ingredients" provided, assuming the user also has the "Assumed Essentials". You MUST ONLY output a valid JSON object with a single key "recipes" which is an array of 3 objects. Each object must have keys: "recipeName", "tasteScore", "cookingTime", "accompanimentSuggestion", "keyIngredients".`;
-            const userPrompt = `Criteria: Time: ${userSelections.time}, Servings: ${userSelections.servings}, Diet: ${userSelections.diet}, Accompaniment: ${userSelections.accompaniment}, Spice: ${userSelections.spice}, Texture: ${userSelections.texture}. Main Ingredients: ${mainIngredients}. Assumed Essentials: Onion, Garlic, Ginger, Green Chilli, Coriander, Spices. Custom additions: ${userSelections.customIngredients}`;
+            const systemPrompt = `You are Rasoi.AI. Generate 3 distinct recipe ideas. Base the recipes primarily on the "Main Ingredients" provided, assuming the user also has the "Assumed Essentials". Adhere to any "Special Preferences". You MUST ONLY output a valid JSON object with a single key "recipes" which is an array of 3 objects. Each object must have keys: "recipeName", "tasteScore", "cookingTime", "accompanimentSuggestion", "keyIngredients".`;
+            const userPrompt = `Criteria: Time: ${userSelections.time}, Servings: ${userSelections.servings}, Diet: ${userSelections.diet}, Accompaniment: ${userSelections.accompaniment}, Spice: ${userSelections.spice}, Texture: ${userSelections.texture}. Main Ingredients: ${mainIngredients}. Assumed Essentials: Onion, Tomato, Garlic, Ginger, Green Chilli, Coriander, Spices. Custom additions: ${userSelections.customIngredients}. Special Preferences: ${userSelections.preferences}`;
             
             const response = await callApiFunction({ systemPrompt, userPrompt });
             
@@ -426,12 +434,16 @@
             recipeLoader.classList.remove('hidden');
             backButton.classList.add('hidden');
 
-            const parent = element.parentElement;
-            parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
-            element.classList.add('selected');
+            if (element) {
+               const parent = element.parentElement;
+               parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+               element.classList.add('selected');
+            }
+            
+            userSelections.preferences = document.getElementById('special-preferences-fastfood').value;
 
-            const systemPrompt = `You are Rasoi.AI. Provide a simple, step-by-step recipe for a specific Indian fast food item, tailored for a bachelor. You MUST ONLY output a valid JSON object with a single key "instructions", which is an array of strings.`;
-            const userPrompt = `Recipe: "${recipeName}". Provide the cooking steps.`;
+            const systemPrompt = `You are Rasoi.AI. Provide a simple, step-by-step recipe for a specific Indian fast food item, tailored for a bachelor. Adhere to any "Special Preferences". You MUST ONLY output a valid JSON object with a single key "instructions", which is an array of strings.`;
+            const userPrompt = `Recipe: "${recipeName}". Special Preferences: ${userSelections.preferences}. Provide the cooking steps.`;
             
             const response = await callApiFunction({ systemPrompt, userPrompt });
 
@@ -445,6 +457,13 @@
             }
             recipeLoader.classList.add('hidden');
             resultsScreen.classList.remove('hidden');
+        }
+        
+        window.getCustomFastFoodRecipe = function() {
+            const customFood = document.getElementById('fast-food-custom-input').value;
+            if (customFood && customFood.trim() !== "") {
+                getFastFoodRecipe(customFood, null);
+            }
         }
 
         function displayRecipeIdeas(recipes) {
@@ -489,8 +508,8 @@
             button.disabled = true;
             button.textContent = "Getting Steps...";
             
-            const systemPrompt = `You are Rasoi.AI. Provide short, efficient, step-by-step cooking instructions for a specific recipe, tailored for a bachelor. You MUST ONLY output a valid JSON object with a single key "instructions" which is an array of strings.`;
-            const userPrompt = `Recipe: "${recipeName}". All previous user criteria apply. Provide the cooking steps.`;
+            const systemPrompt = `You are Rasoi.AI. Provide short, efficient, step-by-step cooking instructions for a specific recipe, tailored for a bachelor. Adhere to any "Special Preferences" the user might have provided. You MUST ONLY output a valid JSON object with a single key "instructions" which is an array of strings.`;
+            const userPrompt = `Recipe: "${recipeName}". All previous user criteria apply. Special Preferences: ${userSelections.preferences}. Provide the cooking steps.`;
             
             const response = await callApiFunction({ systemPrompt, userPrompt });
             
@@ -514,9 +533,12 @@
             document.getElementById(`step-1`).classList.remove('hidden');
             userSelections.ingredients.clear();
             populateIngredients(); // This will re-add the essentials
-            userSelections.time=null; userSelections.servings=1; userSelections.diet=null; userSelections.accompaniment=null; userSelections.spice=null; userSelections.texture=null; userSelections.customIngredients='';
+            userSelections.time=null; userSelections.servings=1; userSelections.diet=null; userSelections.accompaniment=null; userSelections.spice=null; userSelections.texture=null; userSelections.customIngredients=''; userSelections.preferences='';
             document.querySelectorAll('.selected').forEach(c => c.classList.remove('selected'));
             document.getElementById('custom-ingredients').value = '';
+            document.getElementById('special-preferences-regular').value = '';
+            document.getElementById('special-preferences-fastfood').value = '';
+            document.getElementById('fast-food-custom-input').value = '';
             document.getElementById('servings-count').innerText = '1';
             updateUIForStep();
         }
